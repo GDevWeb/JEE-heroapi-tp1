@@ -2,18 +2,21 @@ package com.example.heroapi.mapper;
 
 import com.example.heroapi.dto.HeroDTO;
 import com.example.heroapi.model.Hero;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring") // nécessaire pour l'injection
+@Mapper(componentModel = "spring")
 public interface HeroMapper {
 
-    HeroMapper INSTANCE = Mappers.getMapper(HeroMapper.class);
-
     HeroDTO toDto(Hero hero);
+
     Hero toEntity(HeroDTO dto);
 
     List<HeroDTO> toDtoList(List<Hero> heroes);
+
+    @AfterMapping
+    default void calculatePowerLevel(@MappingTarget HeroDTO dto) {
+        dto.calculatePowerLevel();
+    }
 }

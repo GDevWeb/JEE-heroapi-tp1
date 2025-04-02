@@ -1,14 +1,10 @@
 package com.example.heroapi.service;
 
+import com.example.heroapi.dto.ArenaRegistrationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class ArenaRegistrationServiceImpl implements ArenaRegistrationService {
@@ -17,28 +13,25 @@ public class ArenaRegistrationServiceImpl implements ArenaRegistrationService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    // adresse du serveur
-    private static final String ARENA_URL = "http://51.210.251.137/";
+   // private static final String ARENA_URL = "http://51.210.251.137/arena/register"; //ali
+   private static final String ARENA_URL = "https://webhook.site/6923c6b7-92ad-4e2f-ba69-476222f2bcc5";
 
     @Override
     public void register() {
-        List<Map<String, String>> payload = new ArrayList<>();
+        ArenaRegistrationRequest request = new ArenaRegistrationRequest(
+                "Gaëtan DevWeb",
+                "http://localhost:8082"
+        );
 
-        Map<String, String> id1 = new HashMap<>();
-        id1.put("key", "GD@evweb");
-        id1.put("value", "Gaëtan");
-        payload.add(id1);
-
-        Map<String, String> id2 = new HashMap<>();
-        id2.put("key", "baseUrl");
-        id2.put("value", "http://localhost:8082");
-        payload.add(id2);
+       /* ObjectMapper mapper = new ObjectMapper();
+        String jsonPayload = mapper.writeValueAsString(payload);
+        logger.info("Payload envoyé à l’arène : {}", jsonPayload); */
 
         try {
-            restTemplate.postForEntity(ARENA_URL, payload, String.class);
-            logger.info("API connection à l'arène réussi.");
+            restTemplate.postForEntity(ARENA_URL, request, Void.class);
+            logger.info("✅ Enregistrement à l'arène réussi.");
         } catch (Exception e) {
-            logger.error("Échec d'enregistrement à l'arène.", e);
+            logger.error("❌ Échec d'enregistrement à l'arène.", e);
         }
     }
 }
