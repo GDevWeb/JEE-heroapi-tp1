@@ -1,5 +1,6 @@
 package com.example.heroapi.service;
 
+import com.example.heroapi.exception.InvalidHeroException;
 import com.example.heroapi.model.Hero;
 import com.example.heroapi.repository.HeroRepository;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,18 @@ public class HeroServiceImpl implements HeroService {
 
     @Override
     public Hero createHero(Hero hero) {
+
+        int TotalStats = java.util.stream.IntStream.of(
+                hero.getStrength(),
+                hero.getDefense(),
+                hero.getAccuracy(),
+                hero.getIntelligence(),
+                hero.getLuck()
+        ).reduce(0, Integer::sum);
+
+        if (TotalStats > 300){
+            throw new InvalidHeroException("Le total des stats ne doit pas dépasser les 300!");
+        }
         return heroRepository.save(hero);
     }
 }

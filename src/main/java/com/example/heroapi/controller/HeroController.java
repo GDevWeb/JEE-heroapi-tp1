@@ -5,6 +5,10 @@ import com.example.heroapi.service.HeroService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.heroapi.dto.HeroDTO;
+import com.example.heroapi.mapper.HeroMapper;
+
+
 import java.util.List;
 
 @RestController
@@ -12,45 +16,44 @@ import java.util.List;
 public class HeroController {
 
     private final HeroService heroService;
+    private final HeroMapper heroMapper;
 
-    public HeroController(HeroService heroService) {
+    public HeroController(HeroService heroService, HeroMapper heroMapper) {
         this.heroService = heroService;
+        this.heroMapper = heroMapper;
     }
 
-    // GET /api/heroes
     @GetMapping
-    public List<Hero> getAllHeroes() {
-        return heroService.getAllHeroes();
+    public List<HeroDTO> getAllHeroes() {
+        return heroMapper.toDtoList(heroService.getAllHeroes());
     }
 
-    // GET /api/heroes/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<Hero> getHeroById(@PathVariable Long id) {
+    public ResponseEntity<HeroDTO> getHeroById(@PathVariable Long id) {
         return heroService.getHeroById(id)
+                .map(heroMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/heroes/search?name=bat
     @GetMapping("/search")
-    public List<Hero> searchHeroes(@RequestParam String name) {
-        return heroService.searchHeroesByName(name);
+    public List<HeroDTO> searchHeroes(@RequestParam String name) {
+        return heroMapper.toDtoList(heroService.searchHeroesByName(name));
     }
 
-    // GET /api/heroes/random
     @GetMapping("/random")
-    public ResponseEntity<Hero> getRandomHero() {
+    public ResponseEntity<HeroDTO> getRandomHero() {
         Hero random = heroService.getRandomHero();
         if (random == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(random);
+        return ResponseEntity.ok(heroMapper.toDto(random));
     }
 
-    // POST /api/heroes
     @PostMapping
-    public Hero createHero(@RequestBody Hero hero) {
-        return heroService.createHero(hero);
+    public ResponseEntity<HeroDTO> createHero(@RequestBody HeroDTO heroDTO) {
+        Hero heroToSave = heroMapper.toEntity(heroDTO);
+        Hero saved = heroService.createHero(heroToSave);
+        return ResponseEntity.ok(heroMapper.toDto(saved));
     }
 }
-
