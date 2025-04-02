@@ -1,0 +1,8 @@
+2025-04-02 14:04:07.585103+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Erreur de syntaxe dans l'instruction SQL "SELECT * FROM HERO.[*]"; attendu "identifier"
+Syntax error in SQL statement "SELECT * FROM HERO.[*]"; expected "identifier"; SQL statement:
+SELECT * FROM HERO. [42001-232]
+2025-04-02 20:10:20.221109+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Erreur de syntaxe dans l'instruction SQL "SELECT * FROM HERO.[*]"; attendu "identifier"
+Syntax error in SQL statement "SELECT * FROM HERO.[*]"; expected "identifier"; SQL statement:
+SELECT * FROM HERO. [42001-232]
