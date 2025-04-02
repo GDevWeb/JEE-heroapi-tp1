@@ -1,0 +1,16 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://prod-server-url:5432/hero-db
+    username: prod_user
+    password: securePassword
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+
+logging:
+  level:
+    root: WARN
